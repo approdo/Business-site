@@ -1,7 +1,7 @@
 // Copies the generated site (.output/public) to .preview/<base path>/ so that
-// `serve .preview` serves it under the same sub-path as GitHub Pages, e.g. /Landing-page/.
+// `serve .preview` serves it under the same sub-path as GitHub Pages, /Business-site/.
 // Serving .output/public directly would put the page at '/', and every
-// /Landing-page/_nuxt/... request would then fail with 404.
+// /Business-site/_nuxt/... request would then fail with 404.
 import { access, cp, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'

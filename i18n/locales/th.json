@@ -1,0 +1,35 @@
+{
+  "skipLink": "ข้ามไปที่เนื้อหาหลัก",
+  "header": {
+    "navLabel": "เมนูหลัก",
+    "menuButton": "เมนู",
+    "booking": "จองคิว",
+    "switchLanguage": "English",
+    "switchLanguageLabel": "Switch to English"
+  },
+  "nav": {
+    "home": "หน้าแรก",
+    "services": "บริการ & ราคา",
+    "about": "เกี่ยวกับเรา",
+    "gallery": "แกลเลอรี",
+    "contact": "ติดต่อ"
+  },
+  "pages": {
+    "home": { "title": "ร้านนวดแผนไทย & สปา", "description": "หน้าแรก — เนื้อหาจะมาใน BS-004" },
+    "services": { "title": "บริการ & ราคา", "description": "บริการและราคา — เนื้อหาจะมาใน BS-004" },
+    "about": { "title": "เกี่ยวกับเรา", "description": "เรื่องราวของร้านและทีม — เนื้อหาจะมาใน BS-005" },
+    "gallery": { "title": "แกลเลอรี", "description": "รูปบรรยากาศร้าน — เนื้อหาจะมาใน BS-005" },
+    "contact": { "title": "ติดต่อ", "description": "แผนที่ เวลาเปิด และฟอร์มจองคิว — เนื้อหาจะมาใน BS-005" }
+  },
+  "placeholder": "หน้านี้ยังเป็นโครง — เนื้อหาจริงจะเพิ่มในงานถัดไป",
+  "booking": {
+    "title": "จองคิว",
+    "placeholder": "ฟอร์มจองคิวจะอยู่ตรงนี้"
+  },
+  "footer": {
+    "navTitle": "เมนู",
+    "contactTitle": "ติดต่อ",
+    "phoneLabel": "โทร",
+    "emailLabel": "อีเมล"
+  }
+}

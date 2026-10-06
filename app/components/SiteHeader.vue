@@ -1,8 +1,17 @@
 <script setup lang="ts">
+import type { LocaleCode } from '~/types/content'
+import { contact } from '~/data/contact'
 import { site } from '~/data/site'
 
+const { t, locale } = useI18n()
+const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
+
+// The language switch leads to the same page in the other language (D-004).
+const otherLocale = computed<LocaleCode>(() => (locale.value === 'th' ? 'en' : 'th'))
+
 // Below 1024px the menu is a panel that the "menu" button opens under the header.
-// From 1024px the whole menu sits in the header row and there is no button (D-012).
+// From 1024px the whole menu sits in the header row and there is no button.
 const { isOpen, toggle, close } = useMobileMenu()
 const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
 
@@ -14,11 +23,8 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 // The open panel closes when the focus moves to an element outside the header, e.g. on Tab
-// after the panel's last button: that element is on the page under the backdrop (D-018).
-// The focus is not moved here; it goes on to that element as usual. The panel stays open
-// while the focus stays in the header (the logo link, the menu button, the panel), and when
-// the focus goes to no element at all (`relatedTarget` is null), e.g. after a tap on an empty
-// part of the panel or a switch to another window.
+// after the panel's last link. It stays open when the focus goes to no element at all
+// (`relatedTarget` is null), e.g. after a tap on an empty part of the panel.
 function onFocusOut(event: FocusEvent) {
   const header = event.currentTarget as HTMLElement
   const nextFocus = event.relatedTarget
@@ -47,27 +53,75 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- site-header: gets a shadow once the page has scrolled (design spec 10.8, assets/css/motion.css). -->
   <header
     id="site-header"
-    class="site-header sticky top-0 z-50 border-b border-border bg-surface"
+    class="sticky top-0 z-50 border-b border-border bg-surface"
     @focusout="onFocusOut"
   >
-    <div class="page-container flex h-16 items-center justify-between gap-4">
-      <!-- Named by its visible text, "BrightPath Academy", so it has no aria-label (D-010). -->
-      <a
-        href="#hero"
-        class="inline-flex min-h-11 items-center gap-2.5 text-brand-900"
+    <div class="page-container flex h-16 items-center gap-4">
+      <!-- Named by its visible text, the brand name. -->
+      <NuxtLink
+        :to="localePath('/')"
+        class="inline-flex min-h-11 items-center text-brand-900"
+        @click="close"
       >
         <BrandLogo />
-      </a>
+      </NuxtLink>
 
-      <!-- The name stays the same whether the menu is open or closed; aria-expanded tells which (D-010). -->
+      <nav
+        id="site-nav"
+        class="lg:static lg:ml-auto lg:flex lg:max-h-none lg:items-center lg:gap-7 lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
+        :class="isOpen
+          ? 'fixed inset-x-0 top-16 z-49 max-h-[calc(100dvh-64px)] overflow-y-auto border-b border-border bg-surface px-5 pt-1 pb-6 shadow-card md:px-8'
+          : 'hidden'"
+        :aria-label="t('header.navLabel')"
+      >
+        <ul
+          role="list"
+          class="lg:flex lg:gap-6"
+        >
+          <li
+            v-for="item in site.nav"
+            :key="item.page"
+          >
+            <!-- NuxtLink marks the link of the current page with aria-current="page". -->
+            <NuxtLink
+              :to="localePath(item.path)"
+              class="flex min-h-14 items-center justify-between gap-4 border-b border-border text-[18px] whitespace-nowrap text-ink hover:text-brand-700 aria-[current=page]:font-bold lg:min-h-11 lg:border-0 lg:text-[16px]"
+              @click="close"
+            >
+              {{ t(`nav.${item.page}`) }}
+              <IconChevronRight class="size-5 shrink-0 text-ink-muted lg:hidden" />
+            </NuxtLink>
+          </li>
+        </ul>
+        <BaseButton
+          :to="localePath(contact.bookingPath)"
+          class="mt-5 w-full lg:mt-0 lg:min-h-11 lg:w-auto lg:px-5 lg:py-2 lg:text-[16px]"
+          @click="close"
+        >
+          {{ t('header.booking') }}
+        </BaseButton>
+      </nav>
+
+      <!-- Outside the menu panel, so it is one tap away on phones too. -->
+      <NuxtLink
+        :to="switchLocalePath(otherLocale)"
+        :lang="otherLocale"
+        :hreflang="otherLocale"
+        :aria-label="t('header.switchLanguageLabel')"
+        class="ml-auto inline-flex min-h-11 items-center px-2 font-bold text-brand-700 hover:underline lg:ml-0"
+        @click="close"
+      >
+        {{ t('header.switchLanguage') }}
+      </NuxtLink>
+
+      <!-- The name stays the same whether the menu is open or closed; aria-expanded tells which. -->
       <button
         ref="menuButton"
         type="button"
         class="-mr-2.5 inline-grid size-12 cursor-pointer place-items-center rounded-button text-brand-900 hover:bg-brand-50 active:bg-brand-100 lg:hidden"
-        :aria-label="site.header.menuButtonLabel"
+        :aria-label="t('header.menuButton')"
         :aria-expanded="isOpen"
         aria-controls="site-nav"
         @click="toggle"
@@ -81,41 +135,6 @@ onBeforeUnmount(() => {
           class="size-[26px]"
         />
       </button>
-
-      <nav
-        id="site-nav"
-        class="lg:static lg:flex lg:max-h-none lg:items-center lg:gap-7 lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
-        :class="isOpen
-          ? 'fixed inset-x-0 top-16 z-49 max-h-[calc(100dvh-64px)] overflow-y-auto border-b border-border bg-surface px-5 pt-1 pb-6 shadow-card md:px-8'
-          : 'hidden'"
-        :aria-label="site.header.navLabel"
-      >
-        <ul
-          role="list"
-          class="lg:flex lg:gap-6"
-        >
-          <li
-            v-for="link in site.nav"
-            :key="link.href"
-          >
-            <a
-              :href="link.href"
-              class="flex min-h-14 items-center justify-between gap-4 border-b border-border text-[18px] whitespace-nowrap text-ink hover:text-brand-700 active:bg-brand-50 lg:min-h-11 lg:border-0 lg:text-[16px] lg:decoration-2 lg:underline-offset-6 lg:hover:underline lg:active:bg-transparent"
-              @click="close"
-            >
-              {{ link.label }}
-              <IconChevronRight class="size-5 shrink-0 text-ink-muted lg:hidden" />
-            </a>
-          </li>
-        </ul>
-        <BaseButton
-          :href="site.hero.primaryCta.href"
-          class="mt-5 w-full lg:mt-0 lg:min-h-11 lg:w-auto lg:px-5 lg:py-2 lg:text-[16px]"
-          @click="close"
-        >
-          {{ site.hero.primaryCta.label }}
-        </BaseButton>
-      </nav>
     </div>
   </header>
 

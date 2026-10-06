@@ -1,0 +1,36 @@
+{
+  "skipLink": "Skip to main content",
+  "header": {
+    "navLabel": "Main menu",
+    "menuButton": "Menu",
+    "booking": "Book now",
+    "switchLanguage": "ไทย",
+    "switchLanguageLabel": "เปลี่ยนเป็นภาษาไทย"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services & Prices",
+    "about": "About us",
+    "gallery": "Gallery",
+    "contact": "Contact"
+  },
+  "pages": {
+    "home": { "title": "Thai Massage & Spa", "description": "Home page — content comes in BS-004" },
+    "services": { "title": "Services & Prices", "description": "Services and prices — content comes in BS-004" },
+    "about": { "title": "About us", "description": "Our story and team — content comes in BS-005" },
+    "gallery": { "title": "Gallery", "description": "Photos of the shop — content comes in BS-005" },
+    "contact": { "title": "Contact", "description": "Map, opening hours and booking form — content comes in BS-005" }
+  },
+  "placeholder": "This page is a skeleton — the real content comes in the next tasks.",
+  "booking": {
+    "title": "Book now",
+    "placeholder": "The booking form goes here."
+  },
+  "footer": {
+    "navTitle": "Menu",
+    "contactTitle": "Contact",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "disclaimerTranslation": "Demo website for a portfolio · the brand and all details are fictional"
+  }
+}

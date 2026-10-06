@@ -1,3 +1,7 @@
+// TODO(BS-004): copied from Landing-page and not run yet in this project. It still reads the
+// Landing-page fields of app/data/site.ts (logo, hero, ...), which the skeleton no longer has:
+// update it to the chosen brand before running `npm run brand-images`.
+//
 // Makes the site's icons and link-preview image from the logo (design spec 4.1, D-002, D-011):
 //
 //   public/favicon.svg           browser tab icon: the logo mark

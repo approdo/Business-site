@@ -1,5 +1,5 @@
 # Checks every push and pull request, and publishes `main` to GitHub Pages:
-# https://0984043505frong.github.io/Landing-page/
+# https://0984043505frong.github.io/Business-site/
 # Repository settings -> Pages -> Source must be "GitHub Actions". No secrets are needed.
 name: CI and deploy
 
@@ -56,7 +56,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       # Playwright starts `npm run preview`, which serves the output of the generate step
-      # under /Landing-page/, so this has to come after it.
+      # under /Business-site/, so this has to come after it.
       - name: End-to-end tests
         run: npm run test:e2e
 

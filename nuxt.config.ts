@@ -1,14 +1,15 @@
 import tailwindcss from '@tailwindcss/vite'
 import { site } from './app/data/site'
 
-// GitHub Pages serves this project under a sub-path, e.g. '/Landing-page/'.
+// GitHub Pages serves this project under a sub-path, '/Business-site/'.
 // It is taken from the site URL and set here on purpose, not through NUXT_APP_BASE_URL:
 // Git Bash on Windows rewrites environment values that start with '/' into Windows paths.
-const baseURL = new URL(site.url).pathname
+const siteUrl = new URL(site.url)
+const baseURL = siteUrl.pathname
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/fonts'],
+  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxtjs/i18n'],
   components: [
     // Icon components go by their file name (IconMenu), without the folder prefix (IconsIconMenu).
     { path: '~/components/icons', pathPrefix: false },
@@ -18,19 +19,15 @@ export default defineNuxtConfig({
   app: {
     baseURL,
     head: {
-      htmlAttrs: { lang: 'th' },
       link: [
         // Nuxt does not add the base URL to files in public/, so join it by hand.
-        // Without the apple-touch-icon link, iOS looks for the icon at the root of the domain,
-        // outside this site's sub-path. Both images come from scripts/generate-brand-images.mjs.
         { rel: 'icon', type: 'image/svg+xml', href: `${baseURL}favicon.svg` },
-        { rel: 'apple-touch-icon', href: `${baseURL}apple-touch-icon.png` },
       ],
     },
   },
   css: ['~/assets/css/main.css'],
   experimental: {
-    // One static page without data fetching: skip the separate _payload.json request.
+    // Static pages without data fetching: skip the separate _payload.json request.
     payloadExtraction: false,
   },
   compatibilityDate: '2026-09-27',
@@ -41,15 +38,6 @@ export default defineNuxtConfig({
     // `npm run typecheck` also checks the tests and the test runner configs.
     nodeTsConfig: {
       include: ['../tests/**/*', '../vitest.config.ts', '../playwright.config.ts'],
-    },
-  },
-  hooks: {
-    // No <link rel="prefetch"> for any chunk. Nuxt 4.5.2 prefetches every lazily hydrated
-    // component, hydrate-never ones included (in production builds it cannot match them to
-    // their files), so the browser would still download their JavaScript after the page loads.
-    // The page needs only the entry at load; a lazy chunk is fetched when its component hydrates.
-    'build:manifest': (manifest) => {
-      for (const chunk of Object.values(manifest)) chunk.prefetch = false
     },
   },
   eslint: {
@@ -64,5 +52,23 @@ export default defineNuxtConfig({
       subsets: ['thai', 'latin'],
       preload: true,
     },
+  },
+  // Two languages, each with its own URLs (D-004): Thai at /Business-site/<page>/,
+  // English at /Business-site/en/<page>/. `nuxt generate` writes the pages of both.
+  i18n: {
+    strategy: 'prefix_except_default',
+    defaultLocale: 'th',
+    locales: [
+      { code: 'th', language: 'th', file: 'th.json' },
+      { code: 'en', language: 'en', file: 'en.json' },
+    ],
+    // A static site has no server to redirect by the browser's language: every visitor gets the
+    // language of the URL they opened and switches with the button in the header.
+    detectBrowserLanguage: false,
+    // Links end with '/', like the folders that `nuxt generate` writes (services/index.html),
+    // so GitHub Pages serves them without a redirect.
+    trailingSlash: true,
+    // Origin for the absolute URLs in the hreflang links; the base path is added by the router.
+    baseUrl: siteUrl.origin,
   },
 })

@@ -1,10 +1,8 @@
 @import "tailwindcss";
 @import "./theme.css";
-/* Motion of v1.1: reveal, count-up, hover lift, FAQ answer, header shadow (design spec 10). */
-@import "./motion.css";
 
 /*
- * Width of the page content (design spec 2.5): 20px side padding on phones, 32px from 768px,
+ * Width of the page content: 20px side padding on phones, 32px from 768px,
  * and at most 1200px wide including the padding, centred on wide screens.
  */
 @utility page-container {
@@ -19,7 +17,7 @@
 }
 
 /*
- * Light tints mixed from theme colours (design spec 2.2), so they follow a change of theme:
+ * Light tints mixed from theme colours, so they follow a change of theme:
  * the background of a form field with an error, and the circle behind the thank-you icon.
  */
 @utility bg-danger-tint {
@@ -62,7 +60,7 @@
     line-height: 1.7;
   }
 
-  /* Visible keyboard focus on everything that can be focused (design spec 4.0). */
+  /* Visible keyboard focus on everything that can be focused. */
   :focus-visible {
     outline: 3px solid var(--color-brand-700);
     outline-offset: 2px;
@@ -75,7 +73,7 @@
 }
 
 /*
- * The Thai text while Noto Sans Thai is still downloading (LP-026).
+ * The Thai text while Noto Sans Thai is still downloading (Landing-page LP-026).
  *
  * @nuxt/fonts gives Noto Sans Thai size-adjusted fallbacks for Latin system fonts only, and none of them
  * has Thai letters. Until the web font arrived, the browser drew Thai in a system font at that font's own

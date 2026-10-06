@@ -2,8 +2,8 @@ import { defineConfig, devices } from '@playwright/test'
 import { site } from './app/data/site'
 
 // `npm run preview` serves the generated site on this port under the same sub-path as
-// GitHub Pages, e.g. http://localhost:4173/Landing-page/
-const PREVIEW_PORT = 4173
+// GitHub Pages, http://localhost:4174/Business-site/ (4173 is left to Landing-page)
+const PREVIEW_PORT = 4174
 const previewUrl = new URL(new URL(site.url).pathname, `http://localhost:${PREVIEW_PORT}`).href
 
 const isCI = Boolean(process.env.CI)

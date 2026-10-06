@@ -1,12 +1,12 @@
 /**
  * Class on <html> while the mobile menu is open. main.css uses it to stop the page behind the
- * menu from scrolling, and other parts of the page can hide themselves with it, e.g. the
- * floating LINE button with the Tailwind class `in-[.menu-open]:hidden`.
+ * menu from scrolling, and other parts of the page can hide themselves with it, e.g. a
+ * floating button with the Tailwind class `in-[.menu-open]:hidden`.
  */
 export const MENU_OPEN_CLASS = 'menu-open'
 
 /**
- * Open/closed state of the mobile menu (below 1024px, D-012), shared by every component that
+ * Open/closed state of the mobile menu (below 1024px), shared by every component that
  * calls it: SiteHeader opens and closes the menu, and other components can read `isOpen`.
  */
 export function useMobileMenu() {
