@@ -1,9 +1,12 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { bookingForm } from '../../app/data/bookingForm'
 import { home } from '../../app/data/home'
+import { about } from '../../app/data/pages'
 import { galleryPhotos, photos } from '../../app/data/photos'
 import { reviews } from '../../app/data/reviews'
 import { serviceCategories } from '../../app/data/services'
+import { team } from '../../app/data/team'
 import type { Localized, PhotoFile } from '../../app/types/content'
 import { joinPhrases } from '../../app/utils/phrases'
 
@@ -90,6 +93,51 @@ describe('home', () => {
     const { title, titleAccent } = home.hero
     expect(joinPhrases(title.th)).toContain(titleAccent.th)
     expect(title.en).toContain(titleAccent.en)
+  })
+})
+
+describe('about (AC1, N12)', () => {
+  it('tells the story in both languages', () => {
+    expectBothLanguages(about.story.title, 'story title')
+    expect(about.story.paragraphs.length).toBeGreaterThan(0)
+    for (const paragraph of about.story.paragraphs) expectBothLanguages(paragraph, 'story paragraph')
+  })
+
+  it('lists the team with unique ids, every text in both languages and whole years of experience', () => {
+    expect(team.length).toBeGreaterThan(0)
+    expect(new Set(team.map(member => member.id)).size).toBe(team.length)
+    for (const member of team) {
+      for (const field of [member.name, member.initial, member.role, member.specialty]) expectBothLanguages(field, member.id)
+      expect(Number.isInteger(member.years) && member.years > 0, member.id).toBe(true)
+    }
+  })
+
+  it('shows a single letter in each team avatar, never a photo', () => {
+    for (const member of team) {
+      expect([...member.initial.th], member.id).toHaveLength(1)
+      expect([...member.initial.en], member.id).toHaveLength(1)
+      expect(member, member.id).not.toHaveProperty('photo')
+    }
+  })
+})
+
+describe('gallery (AC2)', () => {
+  it('has 8 to 12 photos with unique ids', () => {
+    expect(galleryPhotos.length).toBeGreaterThanOrEqual(8)
+    expect(galleryPhotos.length).toBeLessThanOrEqual(12)
+    expect(new Set(galleryPhotos.map(photo => photo.id)).size).toBe(galleryPhotos.length)
+  })
+})
+
+describe('booking form texts (N8)', () => {
+  it('have every label and every error message in both languages', () => {
+    const { fields, errors } = bookingForm
+    for (const field of Object.values(fields)) for (const text of Object.values(field)) expectBothLanguages(text, 'field')
+    for (const messages of Object.values(errors)) for (const text of Object.values(messages)) expectBothLanguages(text, 'error')
+  })
+
+  it('say word for word on Thai pages that nothing was sent', () => {
+    expect(joinPhrases(bookingForm.success.note.th)).toBe('(เว็บไซต์ตัวอย่าง — ข้อมูลในฟอร์มไม่ได้ถูกส่งจริง)')
   })
 })
 

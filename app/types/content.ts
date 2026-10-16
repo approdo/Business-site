@@ -61,10 +61,25 @@ export interface OpeningHours {
   lastBooking: Localized
 }
 
+/**
+ * The map on the contact page (D-003).
+ * - 'illustration': a drawn map with no real place, and no request to Google (the default).
+ * - 'google': a Google Maps embed of `embedUrl`, loaded lazily in an <iframe> named by `title`.
+ */
+export interface MapConfig {
+  mode: 'illustration' | 'google'
+  /** The `src` of a Google Maps "Embed a map" code: https://www.google.com/maps/embed?pb=... */
+  embedUrl: string
+  /** The iframe's title, which screen readers announce: what the map shows. */
+  title: Localized
+}
+
 export interface Contact {
   phoneDisplay: string
   phoneHref: `tel:${string}`
   email: string
+  /** A line in place of the street address of this fictional brand. */
+  address: Localized
   hours: OpeningHours
   /** Where every "จองคิว" (book now) button leads: the booking form on the contact page (D-002). */
   bookingPath: `/${string}#${string}`
@@ -73,6 +88,20 @@ export interface Contact {
     href: string
     label: Localized
   }
+  map: MapConfig
+}
+
+/** A therapist on the about page. Made up, and shown with a letter avatar instead of a photo (N12). */
+export interface TeamMember {
+  id: string
+  name: Localized
+  /** The letter in the round avatar. Thai names can start with a vowel sign, so it is written out. */
+  initial: Localized
+  role: Localized
+  /** Years of experience, shown as "ประสบการณ์ 12 ปี" / "12 years of experience". */
+  years: number
+  /** What the therapist is best at, shown after the years. Thai as phrases, so a line breaks only between them. */
+  specialty: LocalizedPhrases
 }
 
 /** Where a photo comes from. Every photo has a row in CREDITS.md as well. */
@@ -184,3 +213,69 @@ export interface Review {
   /** Stars out of 5. */
   rating: 1 | 2 | 3 | 4 | 5
 }
+
+export interface AboutContent {
+  story: {
+    eyebrow: Localized
+    title: LocalizedPhrases
+    /** Two or three paragraphs. */
+    paragraphs: Localized[]
+    photo: Photo
+  }
+  /** The heading above the team cards; the team itself is in app/data/team.ts. */
+  team: SectionText
+}
+
+/**
+ * Texts of the booking form on the contact page (N8). The checks themselves are in
+ * app/utils/validateBooking.ts; each error code they return has a message here.
+ */
+export interface BookingFormContent {
+  title: LocalizedPhrases
+  intro: Localized
+  requiredNote: Localized
+  /** Read by screen readers after a required field's label, in place of the visible "*". */
+  requiredLabel: Localized
+  optionalLabel: Localized
+  fields: {
+    name: { label: Localized }
+    phone: { label: Localized }
+    service: { label: Localized, placeholder: Localized }
+    message: { label: Localized, placeholder: Localized }
+  }
+  notSureLabel: Localized
+  errors: { [Field in BookingField]: { [Code in BookingErrorCodes[Field]]: LocalizedPhrases } }
+  submitLabel: Localized
+  success: {
+    title: LocalizedPhrases
+    message: Localized
+    /** N8: says that nothing was sent. */
+    note: LocalizedPhrases
+    resetLabel: Localized
+  }
+}
+
+/** Values typed into the booking form. */
+export interface BookingRequest {
+  name: string
+  phone: string
+  /** A service id from app/data/services.ts, or NOT_SURE_SERVICE_ID. */
+  service: string
+  message: string
+}
+
+export type BookingField = keyof BookingRequest
+
+/** What can be wrong with a required text field that has a minimum and a maximum length. */
+export type TextLengthError = 'required' | 'tooShort' | 'tooLong'
+
+/** What can be wrong with each field. */
+export interface BookingErrorCodes {
+  name: TextLengthError
+  phone: 'required' | 'invalid'
+  service: 'required' | 'invalid'
+  message: 'tooLong'
+}
+
+/** One error code per invalid field. Valid fields are left out, so `{}` means the form is valid. */
+export type BookingErrors = { [Field in BookingField]?: BookingErrorCodes[Field] }

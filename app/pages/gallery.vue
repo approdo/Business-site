@@ -3,5 +3,11 @@ usePageHead('gallery')
 </script>
 
 <template>
-  <PagePlaceholder page="gallery" />
+  <div>
+    <PageHead page="gallery" />
+    <div class="page-container pb-[72px] lg:pb-24">
+      <PhotoGallery />
+    </div>
+    <BookingBand />
+  </div>
 </template>

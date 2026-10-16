@@ -6,15 +6,14 @@ import { site } from '../../app/data/site'
 
 const th = JSON.parse(readFileSync(new URL('../../i18n/locales/th.json', import.meta.url), 'utf8'))
 
-// The home and services pages in both languages (BS-004). Counts come from the data files,
-// so adding a service or a category needs no change here (G-018).
+// Images and <head> of every page in both languages (BS-004, BS-005), and the content of the home
+// and services pages. Counts come from the data files, so adding a service or a category needs no
+// change here (G-018). The booking links and id="booking" are checked in flows.spec.ts.
 
-const pages = [
-  { name: 'th home', path: './' },
-  { name: 'en home', path: './en/' },
-  { name: 'th services', path: './services/' },
-  { name: 'en services', path: './en/services/' },
-]
+const pages = site.nav.flatMap(({ page, path }) => [
+  { name: `th ${page}`, path: `.${path}` },
+  { name: `en ${page}`, path: `./en${path}` },
+])
 
 const featuredCount = serviceCategories.flatMap(category => category.items).filter(item => item.featured).length
 const itemCount = serviceCategories.reduce((count, category) => count + category.items.length, 0)
@@ -65,11 +64,6 @@ for (const { name, path } of pages) {
     const canonical = await page.locator('head link[rel="canonical"]').getAttribute('href')
     expect(canonical?.startsWith(site.url)).toBe(true)
     await expect(page.locator('head meta[property="og:url"]')).toHaveAttribute('content', canonical ?? '')
-  })
-
-  test(`${name}: has no id="booking", which only the contact form may have (G-021)`, async ({ page }) => {
-    await page.goto(path)
-    await expect(page.locator('#booking')).toHaveCount(0)
   })
 }
 

@@ -56,6 +56,11 @@
     }
   }
 
+  /* Nor does the page behind the open gallery lightbox (PhotoGallery, spec 2). */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
   body {
     background-color: var(--color-bg);
     color: var(--color-text);
