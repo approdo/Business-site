@@ -3,5 +3,11 @@ usePageHead('home')
 </script>
 
 <template>
-  <PagePlaceholder page="home" />
+  <div>
+    <HeroSection />
+    <FeaturedServices />
+    <WhySection />
+    <ReviewsSection />
+    <BookingBand />
+  </div>
 </template>

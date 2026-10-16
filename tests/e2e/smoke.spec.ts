@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
 import { site } from '../../app/data/site'
 
@@ -5,10 +6,13 @@ import { site } from '../../app/data/site'
 // The site path without its trailing slash, '/Business-site', to put in front of a page path.
 const sitePath = new URL(site.url).pathname.replace(/\/$/, '')
 const N10 = 'เว็บไซต์ตัวอย่างเพื่อแสดงผลงาน · แบรนด์และข้อมูลเป็นสมมติ'
+const readMessages = (locale: 'th' | 'en') =>
+  JSON.parse(readFileSync(new URL(`../../i18n/locales/${locale}.json`, import.meta.url), 'utf8'))
+const messages = { th: readMessages('th'), en: readMessages('en') }
 
 const routes = site.nav.flatMap(({ page, path }) => [
-  { page, locale: 'th', path, otherPath: `/en${path}` },
-  { page, locale: 'en', path: `/en${path}`, otherPath: path },
+  { page, locale: 'th' as const, path, otherPath: `/en${path}` },
+  { page, locale: 'en' as const, path: `/en${path}`, otherPath: path },
 ])
 
 for (const route of routes) {
@@ -30,9 +34,10 @@ for (const route of routes) {
     const languageSwitch = page.locator('#site-header a[hreflang]')
     await expect(languageSwitch).toHaveAttribute('href', `${sitePath}${route.otherPath}`)
 
-    // "จองคิว" leads to the booking form in the same language (D-002).
+    // "จองคิว" in the header leads to the booking form in the same language (D-002).
     const bookingPath = route.locale === 'th' ? '/contact/#booking' : '/en/contact/#booking'
-    await expect(page.locator('#site-nav a').last()).toHaveAttribute('href', `${sitePath}${bookingPath}`)
+    const bookingButton = page.locator('#site-header').getByRole('link', { name: messages[route.locale].header.booking, exact: true })
+    await expect(bookingButton).toHaveAttribute('href', `${sitePath}${bookingPath}`)
 
     // N10, word for word, on every page; English pages add a translation after it.
     await expect(page.locator('#site-disclaimer')).toHaveText(N10)

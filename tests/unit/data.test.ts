@@ -24,8 +24,14 @@ const th = readMessages('th')
 const en = readMessages('en')
 
 describe('site', () => {
-  it('is served under /Business-site/', () => {
+  it('is served under /Business-site/ on the approdo Pages site (D-010)', () => {
+    expect(site.url).toBe('https://approdo.github.io/Business-site/')
     expect(new URL(site.url).pathname).toBe('/Business-site/')
+  })
+
+  it('names the brand in both languages', () => {
+    expect(site.name.th).not.toBe('')
+    expect(site.name.en).not.toBe('')
   })
 
   it('lists five pages with unique names and paths ending in /', () => {
@@ -54,9 +60,17 @@ describe('locale messages', () => {
     }
   })
 
-  it('contain no "@", "{", "}", "|" or "$", which vue-i18n reads as message syntax', () => {
+  it('use no vue-i18n message syntax ("@", "|", "$", braces) apart from named values such as {price}', () => {
     for (const [key, text] of [...entriesOf(th), ...entriesOf(en)]) {
-      expect(text, key).not.toMatch(/[@{}|$]/)
+      expect(text.replace(/\{[a-z]+\}/g, ''), key).not.toMatch(/[@{}|$]/)
+    }
+  })
+
+  it('use the same named values in Thai and English', () => {
+    const englishMessages = new Map(entriesOf(en))
+    for (const [key, text] of entriesOf(th)) {
+      const names = (message: string) => [...message.matchAll(/\{([a-z]+)\}/g)].map(match => match[1]).sort()
+      expect(names(englishMessages.get(key) ?? ''), key).toEqual(names(text))
     }
   })
 })

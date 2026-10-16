@@ -2,17 +2,20 @@
 @import "./theme.css";
 
 /*
- * Width of the page content: 20px side padding on phones, 32px from 768px,
- * and at most 1200px wide including the padding, centred on wide screens.
+ * Width of the page content: the full width less 16px on each side, and at most
+ * --container (1180px) wide, centred on wide screens (spec 1).
  */
 @utility page-container {
-  width: 100%;
-  max-width: 1200px;
+  width: min(100% - 32px, var(--container));
   margin-inline: auto;
-  padding-inline: 20px;
+}
 
-  @variant md {
-    padding-inline: 32px;
+/* Vertical padding of a page section: 72px, and 96px from 1024px (spec 1). */
+@utility section-padding {
+  padding-block: 72px;
+
+  @variant lg {
+    padding-block: 96px;
   }
 }
 
@@ -21,23 +24,22 @@
  * the background of a form field with an error, and the circle behind the thank-you icon.
  */
 @utility bg-danger-tint {
-  background-color: color-mix(in srgb, var(--color-danger) 5%, var(--color-surface));
+  background-color: color-mix(in srgb, var(--color-danger) 5%, var(--color-white));
 }
 
 @utility bg-success-tint {
-  background-color: color-mix(in srgb, var(--color-success) 12%, var(--color-surface));
+  background-color: color-mix(in srgb, var(--color-success) 12%, var(--color-white));
 }
 
 @layer base {
   html {
     /*
-     * Room for the sticky header (64px plus its 1px bottom border): whenever the page scrolls
+     * Room for the sticky header (68px plus its 1px bottom border): whenever the page scrolls
      * something into view, it keeps it out of the top 80px of the window, below the header
-     * instead of under it. That covers the target of an in-page link (a section, the quote form
-     * card), which stops 80px from the top, and any element that gets keyboard focus with Tab or
-     * Shift+Tab. Set once here, on the element that scrolls, so it also covers elements without
-     * an id. Do not give the targets a top scroll margin as well: the two add up, and a link
-     * would then stop 160px from the top.
+     * instead of under it. That covers the target of an in-page link (a price category, the booking
+     * form), and any element that gets keyboard focus with Tab or Shift+Tab. Set once here, on the
+     * element that scrolls, so it also covers elements without an id (G-023). Do not give the targets
+     * a top scroll margin as well: the two add up.
      */
     scroll-padding-top: 80px;
 
@@ -55,44 +57,51 @@
   }
 
   body {
-    background-color: var(--color-surface);
-    color: var(--color-ink);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 16px;
     line-height: 1.7;
   }
 
-  /* Visible keyboard focus on everything that can be focused. */
-  :focus-visible {
-    outline: 3px solid var(--color-brand-700);
-    outline-offset: 2px;
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.35;
   }
 
-  /* On navy backgrounds (hero, footer) the focus ring is orange. */
+  /* Visible keyboard focus on everything that can be focused: gold-ink on light backgrounds (spec 1). */
+  :focus-visible {
+    outline: 3px solid var(--color-gold-ink);
+    outline-offset: 3px;
+  }
+
+  /* On the dark backgrounds (booking band, footer) the focus ring is light gold. */
   .on-dark :focus-visible {
-    outline-color: var(--color-accent-500);
+    outline-color: var(--color-gold-light);
   }
 }
 
 /*
- * The Thai text while Noto Sans Thai is still downloading (Landing-page LP-026).
+ * The Thai text while Noto Sans Thai is still downloading (Landing-page LP-026, kept by D-005 / D-007).
  *
- * @nuxt/fonts gives Noto Sans Thai size-adjusted fallbacks for Latin system fonts only, and none of them
- * has Thai letters. Until the web font arrived, the browser drew Thai in a system font at that font's own
- * size (Tahoma on Windows, 7-13% wider than Noto Sans Thai): the hero heading and subheading wrapped
- * differently and the page jumped when the web font came in (layout shift 0.27 at 1440x900).
+ * @nuxt/fonts gives the web fonts size-adjusted fallbacks for Latin system fonts only, and none of them
+ * has Thai letters. Until the web font arrived, the browser would draw Thai in a system font at that
+ * font's own size (Tahoma on Windows, 7-13% wider than Noto Sans Thai), and the page would jump when the
+ * web font came in.
  *
  * These faces scale Tahoma to the width of Noto Sans Thai (size-adjust) with the ascent and descent of
- * Noto Sans Thai, for Thai letters only (unicode-range = the "thai" subset of Noto Sans Thai). --font-sans
- * in theme.css lists them after Noto Sans Thai, so once the web font has loaded they are not used and the
+ * Noto Sans Thai, for Thai letters only (unicode-range = the "thai" subset). --font-body and --font-heading
+ * in theme.css list them after the web font, so once the web font has loaded they are not used and the
  * finished page does not change.
  *
- * size-adjust was measured on this page: the width of the text in Noto Sans Thai divided by its width in
- * Tahoma, then checked at every window width from 320 to 1920px so that the hero text wraps the same in
- * both fonts at 375, 768, 812 and 1440px.
- * - 700: the hero heading's ratio, 91.09%. At 91.6% or more its second line no longer fits on wide screens.
- * - 400: 97%. The page's average ratio (95.74%) makes the hero subheading wrap differently at 375px, and at
- *   98% it wraps differently on wide screens.
+ * size-adjust was measured on the Landing-page for Noto Sans Thai: 97% for regular text and 91.09% for
+ * bold headings. This site loads weights 400 and 600; the browser uses the 700 face below for 600.
+ * The serif headings (Noto Serif Thai) use the same faces without new measurements (BS-008).
  * ascent-override = 1.061 / size-adjust, descent-override = 0.45 / size-adjust (Noto Sans Thai: ascent 1061,
- * descent 450, 1000 units per em). After changing the font or the hero text, measure these again.
+ * descent 450, 1000 units per em).
  */
 @font-face {
   font-family: "Thai Fallback: Tahoma";

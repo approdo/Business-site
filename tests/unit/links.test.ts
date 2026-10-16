@@ -11,7 +11,7 @@ describe('newTabAttributes', () => {
   it('opens links to this site, phone numbers and email addresses in place', () => {
     expect(newTabAttributes('/contact/#booking')).toEqual({})
     expect(newTabAttributes('tel:+6620000000')).toEqual({})
-    expect(newTabAttributes('mailto:hello@demo-spa.example')).toEqual({})
+    expect(newTabAttributes('mailto:hello@nuanplai.example')).toEqual({})
   })
 
   it('gives none of the demo contact links a target', () => {

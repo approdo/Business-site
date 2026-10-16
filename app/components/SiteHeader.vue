@@ -7,8 +7,9 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
 
-// The language switch leads to the same page in the other language (D-004).
-const otherLocale = computed<LocaleCode>(() => (locale.value === 'th' ? 'en' : 'th'))
+// "TH / EN": the current language as plain text, the other one as a link to the same page
+// in that language (D-004, spec 2).
+const languages: LocaleCode[] = ['th', 'en']
 
 // Below 1024px the menu is a panel that the "menu" button opens under the header.
 // From 1024px the whole menu sits in the header row and there is no button.
@@ -55,30 +56,30 @@ onBeforeUnmount(() => {
 <template>
   <header
     id="site-header"
-    class="sticky top-0 z-50 border-b border-border bg-surface"
+    class="sticky top-0 z-50 border-b border-line bg-bg/94 backdrop-blur-[6px]"
     @focusout="onFocusOut"
   >
-    <div class="page-container flex h-16 items-center gap-4">
+    <div class="page-container flex min-h-[68px] items-center gap-3">
       <!-- Named by its visible text, the brand name. -->
       <NuxtLink
         :to="localePath('/')"
-        class="inline-flex min-h-11 items-center text-brand-900"
+        class="mr-auto inline-flex min-h-11 items-center no-underline"
         @click="close"
       >
-        <BrandLogo />
+        <BrandLogo compact />
       </NuxtLink>
 
       <nav
         id="site-nav"
-        class="lg:static lg:ml-auto lg:flex lg:max-h-none lg:items-center lg:gap-7 lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
+        class="lg:static lg:mr-4 lg:block lg:max-h-none lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
         :class="isOpen
-          ? 'fixed inset-x-0 top-16 z-49 max-h-[calc(100dvh-64px)] overflow-y-auto border-b border-border bg-surface px-5 pt-1 pb-6 shadow-card md:px-8'
+          ? 'fixed inset-x-0 top-[69px] z-49 max-h-[calc(100dvh-69px)] overflow-y-auto border-b border-line bg-card px-4 pb-4 shadow-card'
           : 'hidden'"
         :aria-label="t('header.navLabel')"
       >
         <ul
           role="list"
-          class="lg:flex lg:gap-6"
+          class="lg:flex lg:gap-7"
         >
           <li
             v-for="item in site.nav"
@@ -87,40 +88,58 @@ onBeforeUnmount(() => {
             <!-- NuxtLink marks the link of the current page with aria-current="page". -->
             <NuxtLink
               :to="localePath(item.path)"
-              class="flex min-h-14 items-center justify-between gap-4 border-b border-border text-[18px] whitespace-nowrap text-ink hover:text-brand-700 aria-[current=page]:font-bold lg:min-h-11 lg:border-0 lg:text-[16px]"
+              class="flex min-h-14 items-center justify-between gap-4 border-b border-line text-[18px] whitespace-nowrap text-text no-underline transition-[color,border-color] duration-200 hover:text-accent lg:min-h-11 lg:border-b-2 lg:border-transparent lg:text-[16px] lg:text-text-muted lg:hover:text-text lg:aria-[current=page]:border-gold lg:aria-[current=page]:text-text"
               @click="close"
             >
               {{ t(`nav.${item.page}`) }}
-              <IconChevronRight class="size-5 shrink-0 text-ink-muted lg:hidden" />
+              <IconChevronRight class="size-5 shrink-0 text-text-muted lg:hidden" />
             </NuxtLink>
           </li>
         </ul>
-        <BaseButton
-          :to="localePath(contact.bookingPath)"
-          class="mt-5 w-full lg:mt-0 lg:min-h-11 lg:w-auto lg:px-5 lg:py-2 lg:text-[16px]"
-          @click="close"
-        >
-          {{ t('header.booking') }}
-        </BaseButton>
       </nav>
 
       <!-- Outside the menu panel, so it is one tap away on phones too. -->
-      <NuxtLink
-        :to="switchLocalePath(otherLocale)"
-        :lang="otherLocale"
-        :hreflang="otherLocale"
-        :aria-label="t('header.switchLanguageLabel')"
-        class="ml-auto inline-flex min-h-11 items-center px-2 font-bold text-brand-700 hover:underline lg:ml-0"
+      <div class="flex items-center text-[14px] font-semibold text-text-muted">
+        <template
+          v-for="(code, index) in languages"
+          :key="code"
+        >
+          <span
+            v-if="index > 0"
+            aria-hidden="true"
+          >/</span>
+          <span
+            v-if="code === locale"
+            class="px-1.5 text-accent"
+          >{{ code.toUpperCase() }}</span>
+          <NuxtLink
+            v-else
+            :to="switchLocalePath(code)"
+            :lang="code"
+            :hreflang="code"
+            :aria-label="t('header.switchLanguageLabel')"
+            class="inline-grid min-h-11 place-items-center px-1.5 no-underline hover:text-text hover:underline"
+            @click="close"
+          >
+            {{ code.toUpperCase() }}
+          </NuxtLink>
+        </template>
+      </div>
+
+      <!-- "Book now" stays in the header row at every width (spec 2), so the panel does not repeat it. -->
+      <BaseButton
+        :to="localePath(contact.bookingPath)"
+        class="min-h-11 px-[18px]"
         @click="close"
       >
-        {{ t('header.switchLanguage') }}
-      </NuxtLink>
+        {{ t('header.booking') }}
+      </BaseButton>
 
       <!-- The name stays the same whether the menu is open or closed; aria-expanded tells which. -->
       <button
         ref="menuButton"
         type="button"
-        class="-mr-2.5 inline-grid size-12 cursor-pointer place-items-center rounded-button text-brand-900 hover:bg-brand-50 active:bg-brand-100 lg:hidden"
+        class="inline-grid size-11 shrink-0 cursor-pointer place-items-center rounded-[12px] border border-line text-text transition-[background-color] duration-200 hover:bg-surface lg:hidden"
         :aria-label="t('header.menuButton')"
         :aria-expanded="isOpen"
         aria-controls="site-nav"
@@ -128,11 +147,11 @@ onBeforeUnmount(() => {
       >
         <IconX
           v-if="isOpen"
-          class="size-[26px]"
+          class="size-[22px]"
         />
         <IconMenu
           v-else
-          class="size-[26px]"
+          class="size-[22px]"
         />
       </button>
     </div>
@@ -141,7 +160,7 @@ onBeforeUnmount(() => {
   <!-- Dims the page under the open mobile menu. A click on it closes the menu. -->
   <div
     v-if="isOpen"
-    class="fixed inset-x-0 top-16 bottom-0 z-48 bg-brand-900/55 lg:hidden"
+    class="fixed inset-x-0 top-[69px] bottom-0 z-48 bg-deeper/55 lg:hidden"
     aria-hidden="true"
     @click="close"
   />

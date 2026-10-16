@@ -99,3 +99,33 @@ describe('<PhraseText>', () => {
     expect(await renderPhraseText('ข้อความ ธรรมดา')).toBe('<span>ข้อความ ธรรมดา</span>')
   })
 })
+
+describe('<PhraseText> with accent words', () => {
+  function renderWithAccent(text: ThaiText, accent: string) {
+    return renderToString(createSSRApp({ render: () => h(PhraseText, { text, accent }) }))
+  }
+
+  it('wraps the accent words in <em> inside their phrase, keeping the phrase on one line', async () => {
+    expect(await renderWithAccent(['มือที่นุ่มนวล ', 'กลิ่นไพลที่อบอุ่น'], 'กลิ่นไพล')).toBe(
+      '<span>'
+      + '<span class="whitespace-nowrap">มือที่นุ่มนวล</span> '
+      + '<span class="whitespace-nowrap"><em>กลิ่นไพล</em>ที่อบอุ่น</span>'
+      + '</span>',
+    )
+  })
+
+  it('wraps the accent words of a plain string', async () => {
+    expect(await renderWithAccent('Gentle hands and the warm scent of plai', 'scent of plai'))
+      .toBe('<span>Gentle hands and the warm <em>scent of plai</em></span>')
+  })
+
+  it('wraps only the first place, and changes nothing when the words are not there', async () => {
+    expect(await renderWithAccent('a b a', 'a')).toBe('<span><em>a</em> b a</span>')
+    expect(await renderWithAccent('a b', 'z')).toBe('<span>a b</span>')
+  })
+
+  it('keeps the text the same as joinPhrases', async () => {
+    const title = ['มือที่นุ่มนวล ', 'กลิ่นไพลที่อบอุ่น']
+    expect(textContent(await renderWithAccent(title, 'กลิ่นไพล'))).toBe(joinPhrases(title))
+  })
+})

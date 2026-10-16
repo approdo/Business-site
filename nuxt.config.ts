@@ -20,8 +20,9 @@ export default defineNuxtConfig({
     baseURL,
     head: {
       link: [
-        // Nuxt does not add the base URL to files in public/, so join it by hand.
+        // Nuxt does not add the base URL to files in public/, so join it by hand (G-020).
         { rel: 'icon', type: 'image/svg+xml', href: `${baseURL}favicon.svg` },
+        { rel: 'apple-touch-icon', href: `${baseURL}apple-touch-icon.png` },
       ],
     },
   },
@@ -46,8 +47,13 @@ export default defineNuxtConfig({
   },
   fonts: {
     // Self-hosted at build time, so visitors never connect to Google Fonts.
+    // Only three weights are loaded, to keep the font files small on phones (spec 1):
+    // body text 400 and 600, headings 600.
+    families: [
+      { name: 'Noto Sans Thai', weights: [400, 600] },
+      { name: 'Noto Serif Thai', weights: [600] },
+    ],
     defaults: {
-      weights: [400, 700],
       styles: ['normal'],
       subsets: ['thai', 'latin'],
       preload: true,

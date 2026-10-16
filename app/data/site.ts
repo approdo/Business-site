@@ -1,13 +1,15 @@
 import type { Site } from '../types/content'
 
 // Besides the pages, this file is loaded by nuxt.config.ts, playwright.config.ts and
-// scripts/stage-preview.mjs (plain Node). Keep it free of runtime imports so that
+// the scripts in scripts/ (plain Node). Keep it free of runtime imports so that
 // all of them can read it as it is.
 export const site = {
-  // TODO(brand): placeholder until the design is chosen (BS-001); BS-004 sets the brand name.
-  name: 'Demo Spa',
-  // The one place for the site URL: its path ('/Business-site/') becomes the Nuxt base URL.
-  url: 'https://0984043505frong.github.io/Business-site/',
+  // Nuanplai (นวลไพล) is a made-up brand (BS-001): "นวล" = gentle, "ไพล" = plai, the herb of Thai compresses.
+  name: { th: 'นวลไพล', en: 'Nuanplai' },
+  logoSubtitle: 'NUANPLAI · THAI MASSAGE & SPA',
+  // The one place for the site URL: its path ('/Business-site/') becomes the Nuxt base URL,
+  // and the canonical, og:url and hreflang links start with it (D-010).
+  url: 'https://approdo.github.io/Business-site/',
   // The five pages, in menu order. Their names and texts are in i18n/locales/.
   nav: [
     { page: 'home', path: '/' },

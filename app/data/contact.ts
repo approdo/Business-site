@@ -6,8 +6,12 @@ import type { Contact } from '../types/content'
 export const contact = {
   phoneDisplay: '02-000-0000',
   phoneHref: 'tel:+6620000000',
-  // TODO(brand): BS-004 sets the brand slug, e.g. hello@<brand-slug>.example.
-  email: 'hello@demo-spa.example',
+  email: 'hello@nuanplai.example',
+  hours: {
+    open: { th: 'เปิดทุกวัน', en: 'Open every day' },
+    time: { th: '10:00–22:00 น.', en: '10:00–22:00' },
+    lastBooking: { th: '20:30 น.', en: '20:30' },
+  },
   // Every "จองคิว" (book now) button leads here, in the visitor's language.
   bookingPath: '/contact/#booking',
   // TODO(line): Demo brand with no LINE account, so the LINE button must not link to any LINE ID,

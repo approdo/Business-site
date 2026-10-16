@@ -9,6 +9,6 @@ const { t } = useI18n()
   -->
   <a
     href="#main"
-    class="absolute -top-25 left-3 z-100 rounded-button bg-brand-900 px-4 py-3 font-bold text-white focus:top-3"
+    class="absolute -top-25 left-3 z-100 rounded-button bg-deep px-4 py-3 font-semibold text-on-deep no-underline focus:top-3 focus-visible:outline-gold-light"
   >{{ t('skipLink') }}</a>
 </template>

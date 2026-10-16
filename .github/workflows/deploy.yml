@@ -1,5 +1,5 @@
 # Checks every push and pull request, and publishes `main` to GitHub Pages:
-# https://0984043505frong.github.io/Business-site/
+# https://approdo.github.io/Business-site/ (repository approdo/Business-site, D-010)
 # Repository settings -> Pages -> Source must be "GitHub Actions". No secrets are needed.
 name: CI and deploy
 

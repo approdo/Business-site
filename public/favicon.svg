@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><!-- Placeholder until BS-004 makes the brand icons with scripts/generate-brand-images.mjs. --><rect width="32" height="32" rx="7" fill="#0b2545"/><circle cx="16" cy="16" r="6" fill="#f7941d"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Nuanplai mark. Made by scripts/generate-brand-images.mjs: change the script, not this file. -->
+  <path d="M4 31V15a12 12 0 0 1 24 0v16z" fill="#a4471f"/>
+  <path d="M16 13l5 5-5 5-5-5z" fill="#fbf6ef"/>
+</svg>

@@ -4,8 +4,7 @@
     "navLabel": "เมนูหลัก",
     "menuButton": "เมนู",
     "booking": "จองคิว",
-    "switchLanguage": "English",
-    "switchLanguageLabel": "Switch to English"
+    "switchLanguageLabel": "EN, Switch to English"
   },
   "nav": {
     "home": "หน้าแรก",
@@ -15,8 +14,8 @@
     "contact": "ติดต่อ"
   },
   "pages": {
-    "home": { "title": "ร้านนวดแผนไทย & สปา", "description": "หน้าแรก — เนื้อหาจะมาใน BS-004" },
-    "services": { "title": "บริการ & ราคา", "description": "บริการและราคา — เนื้อหาจะมาใน BS-004" },
+    "home": { "title": "นวดแผนไทย & สปา", "description": "นวลไพล ร้านนวดแผนไทยและสปา นวดไทย นวดน้ำมัน ประคบสมุนไพร โดยหมอนวดประสบการณ์กว่า 10 ปี เปิดทุกวัน 10:00–22:00 น. — เว็บไซต์ตัวอย่าง แบรนด์สมมติ" },
+    "services": { "title": "บริการ & ราคา", "description": "ราคานวดแผนไทย นวดน้ำมัน สปาหน้า และแพ็กเกจของนวลไพล เลือกได้ตามเวลา ราคารวมทุกอย่างแล้ว" },
     "about": { "title": "เกี่ยวกับเรา", "description": "เรื่องราวของร้านและทีม — เนื้อหาจะมาใน BS-005" },
     "gallery": { "title": "แกลเลอรี", "description": "รูปบรรยากาศร้าน — เนื้อหาจะมาใน BS-005" },
     "contact": { "title": "ติดต่อ", "description": "แผนที่ เวลาเปิด และฟอร์มจองคิว — เนื้อหาจะมาใน BS-005" }
@@ -26,10 +25,31 @@
     "title": "จองคิว",
     "placeholder": "ฟอร์มจองคิวจะอยู่ตรงนี้"
   },
+  "call": "โทร",
+  "hours": {
+    "title": "เวลาเปิด",
+    "lastBooking": "รับคิวสุดท้าย"
+  },
+  "home": {
+    "seeServices": "ดูบริการ & ราคา"
+  },
+  "services": {
+    "seeAll": "ดูบริการและราคาทั้งหมด",
+    "categoriesLabel": "หมวดบริการ",
+    "startingAt": "เริ่มต้น {price} บาท",
+    "price": "{price} บาท",
+    "minutes": "{minutes} นาที",
+    "includes": "รวม:"
+  },
+  "reviews": {
+    "rating": "{rating} จาก 5 ดาว"
+  },
   "footer": {
+    "tagline": "นวดแผนไทยและสปา ด้วยมือที่นุ่มนวลและสมุนไพรไทยแท้",
     "navTitle": "เมนู",
     "contactTitle": "ติดต่อ",
     "phoneLabel": "โทร",
-    "emailLabel": "อีเมล"
+    "emailLabel": "อีเมล",
+    "photoCredit": "รูปภาพจาก Unsplash · Pexels"
   }
 }

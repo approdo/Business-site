@@ -1,30 +1,28 @@
-// TODO(BS-004): copied from Landing-page and not run yet in this project. It still reads the
-// Landing-page fields of app/data/site.ts (logo, hero, ...), which the skeleton no longer has:
-// update it to the chosen brand before running `npm run brand-images`.
+// Makes the site's icons and link-preview image (G-020):
 //
-// Makes the site's icons and link-preview image from the logo (design spec 4.1, D-002, D-011):
-//
-//   public/favicon.svg           browser tab icon: the logo mark
+//   public/favicon.svg           browser tab icon: a terracotta arch with a gold diamond
 //   public/apple-touch-icon.png  180×180 home-screen icon for iPhone and iPad, fully opaque
-//   public/og-image.png          1200×630 preview shown when a link to the page is shared
+//   public/og-image.png          1200×630 preview shown when a link to the site is shared
 //
 // Colours are read from app/assets/css/theme.css and text from app/data/site.ts. After changing
 // the brand there, run `npm run brand-images`, look at the three files and commit them.
 //
+// The arch is the shape of the photo frames of design A (--radius-arch) and the diamond is the
+// ornament under its headings. The favicon has no letters: a tab icon cannot load web fonts.
+//
 // The PNG files are rendered by the Chromium that the e2e tests use (@playwright/test; install it
 // once with `npx playwright install chromium`). Rendering needs internet: the page loads the
-// site's font, Noto Sans Thai, from Google Fonts. Only this script does that; the site itself
-// serves its own copy of the font.
+// site's fonts, Noto Serif Thai and Noto Sans Thai, from Google Fonts. Only this script does that;
+// the site itself serves its own copy of the fonts.
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { chromium } from '@playwright/test'
 // Node 22.18+ strips TypeScript types on import, so this reads the same data as the site.
 import { site } from '../app/data/site.ts'
-import { toPhraseParts } from '../app/utils/phrases.ts'
 
 const publicDir = new URL('../public/', import.meta.url)
 const themeCss = await readFile(new URL('../app/assets/css/theme.css', import.meta.url), 'utf8')
 
-/** Reads a colour token, e.g. themeColor('brand-900') returns '#0b2545'. */
+/** Reads a colour token, e.g. themeColor('accent') returns '#a4471f'. */
 function themeColor(name) {
   const match = themeCss.match(new RegExp(`--color-${name}:\\s*(#[0-9a-fA-F]{3,8});`))
   if (!match) throw new Error(`--color-${name} is missing from app/assets/css/theme.css`)
@@ -32,52 +30,36 @@ function themeColor(name) {
 }
 
 const color = {
-  brand900: themeColor('brand-900'),
-  brand800: themeColor('brand-800'),
-  brand100: themeColor('brand-100'),
-  accent500: themeColor('accent-500'),
-  white: themeColor('white'),
+  bg: themeColor('bg'),
+  accent: themeColor('accent'),
+  gold: themeColor('gold'),
+  goldLight: themeColor('gold-light'),
+  deep: themeColor('deep'),
+  onDeep: themeColor('on-deep'),
+  onDeepMuted: themeColor('on-deep-muted'),
 }
 
 function escapeHtml(text) {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
-/** Thai text as nowrap phrases, the way <PhraseText> shows it (design spec 5.1). */
-function phrasesHtml(text) {
-  if (typeof text === 'string') return escapeHtml(text)
-  return toPhraseParts(text)
-    .map(part => `<span class="phrase">${escapeHtml(part.text)}</span>${part.space}${part.wbr ? '<wbr>' : ''}`)
-    .join('')
-}
-
 // ---------------------------------------------------------------------------------------------
-// favicon.svg
-//
-// Drawn like the logo mark in the header: a 38×38 rounded square with an orange dot on its top
-// right corner. The ring around the dot is cut out of the square, so the colour of the browser
-// tab shows through it, as the page colour does in the header. A favicon cannot load web fonts,
-// so the letters use a bold system font, and are a little larger than in the header so that
-// they stay readable at 16–32px.
+// favicon.svg — an arch (a rectangle with a round top) in terracotta, with a cream diamond in it.
+// Plain shapes, so it stays sharp at 16px.
 // ---------------------------------------------------------------------------------------------
 function faviconSvg() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 42">
-  <!-- ${escapeHtml(site.name)} logo mark. Made by scripts/generate-brand-images.mjs: change the script, not this file. -->
-  <mask id="dot-ring">
-    <rect width="42" height="42" fill="white"/>
-    <circle cx="36" cy="6" r="6" fill="black"/>
-  </mask>
-  <rect y="4" width="38" height="38" rx="10" fill="${color.brand900}" mask="url(#dot-ring)"/>
-  <text x="19" y="29.5" fill="${color.white}" font-family="'Noto Sans Thai', 'Noto Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">${escapeHtml(site.logo.mark)}</text>
-  <circle cx="36" cy="6" r="4" fill="${color.accent500}"/>
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- ${escapeHtml(site.name.en)} mark. Made by scripts/generate-brand-images.mjs: change the script, not this file. -->
+  <path d="M4 31V15a12 12 0 0 1 24 0v16z" fill="${color.accent}"/>
+  <path d="M16 13l5 5-5 5-5-5z" fill="${color.bg}"/>
 </svg>
 `
 }
 
 // ---------------------------------------------------------------------------------------------
-// PNG files: small HTML pages rendered by Chromium, with the site's font.
+// PNG files: small HTML pages rendered by Chromium, with the site's fonts.
 // ---------------------------------------------------------------------------------------------
-const FONT_STYLESHEET = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=block'
+const FONT_STYLESHEET = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&family=Noto+Serif+Thai:wght@600&display=block'
 
 function htmlPage(styles, body) {
   return `<!doctype html>
@@ -88,22 +70,8 @@ function htmlPage(styles, body) {
 <style>
   * { box-sizing: border-box; margin: 0; }
   html, body { width: 100%; height: 100%; }
-  body { font-family: 'Noto Sans Thai', sans-serif; background: ${color.brand900}; }
-  .phrase { white-space: nowrap; }
-  /* The logo mark of the header, scaled by --scale (1 = 38px). */
-  .mark {
-    position: relative; display: grid; place-items: center;
-    width: calc(38px * var(--scale)); height: calc(38px * var(--scale));
-    border-radius: calc(10px * var(--scale));
-    font-size: calc(16px * var(--scale)); font-weight: 700; line-height: 1; letter-spacing: .02em;
-  }
-  .mark::after {
-    content: ''; position: absolute;
-    top: calc(-4px * var(--scale)); right: calc(-4px * var(--scale));
-    width: calc(12px * var(--scale)); height: calc(12px * var(--scale));
-    border: calc(2px * var(--scale)) solid ${color.brand900}; border-radius: 50%;
-    background: ${color.accent500};
-  }
+  body { font-family: 'Noto Sans Thai', sans-serif; }
+  .serif { font-family: 'Noto Serif Thai', serif; font-weight: 600; }
   ${styles}
 </style>
 </head>
@@ -112,59 +80,65 @@ function htmlPage(styles, body) {
 }
 
 // iOS rounds the corners of home-screen icons itself, and fills transparent pixels with black.
-// So the icon is a full navy square: the letters of the mark in the middle and the orange dot
-// towards the top right corner, inside the part that stays after rounding.
+// So the icon is a full cream square with the terracotta arch and the first letter of the brand.
 const appleTouchIcon = {
   file: 'apple-touch-icon.png',
   width: 180,
   height: 180,
   html: htmlPage(`
-    body { display: grid; place-items: center; position: relative; }
-    .letters { color: ${color.white}; font-size: 72px; font-weight: 700; line-height: 1; letter-spacing: .02em; }
-    .dot { position: absolute; top: 30px; right: 30px; width: 28px; height: 28px; border-radius: 50%; background: ${color.accent500}; }
-  `, `<span class="letters">${escapeHtml(site.logo.mark)}</span><span class="dot"></span>`),
+    body { display: grid; place-items: center; background: ${color.bg}; }
+    .arch {
+      display: grid; place-items: center; width: 116px; height: 136px; margin-top: 12px;
+      border-radius: 999px 999px 14px 14px; background: ${color.accent};
+      color: ${color.bg}; font-size: 84px; line-height: 1; padding-top: 22px;
+    }
+  `, `<span class="arch serif">${escapeHtml([...site.name.th][0])}</span>`),
 }
 
-// Link preview: the logo mark as in the footer (white on navy), the brand name and the label
-// above the hero heading. Everything sits in the middle, because some apps crop the preview to
-// a square. No people, phone numbers, LINE ID or QR code (N12, N16, D-006).
+// Link preview: the word mark on the dark teak of the booking band, with its faint gold circles.
+// Everything sits in the middle, because some apps crop the preview to a square.
+// No people, phone numbers, LINE ID or QR code (N12, D-002).
 const ogImage = {
   file: 'og-image.png',
   width: 1200,
   height: 630,
   maxBytes: 300 * 1024,
   html: htmlPage(`
-    body { display: grid; place-content: center; justify-items: center; gap: 36px; text-align: center; }
-    .mark { --scale: 3; background: ${color.white}; color: ${color.brand900}; }
-    .name { color: ${color.white}; font-size: 56px; font-weight: 700; line-height: 1.2; }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 12px; max-width: 580px;
-      padding: 10px 24px; border-radius: 999px;
-      background: ${color.brand800}; color: ${color.brand100}; font-size: 26px; line-height: 1.5;
+    body {
+      position: relative; overflow: hidden; display: grid; place-content: center; justify-items: center;
+      background: ${color.deep}; text-align: center;
     }
-    .eyebrow::before { content: ''; flex: none; width: 12px; height: 12px; border-radius: 50%; background: ${color.accent500}; }
+    .circle { position: absolute; width: 520px; height: 520px; border-radius: 50%; border: 2px solid ${color.gold}59; }
+    .circle.one { left: -220px; top: -260px; }
+    .circle.two { right: -220px; bottom: -280px; }
+    .name { color: ${color.onDeep}; font-size: 150px; line-height: 1.3; }
+    .subtitle { margin-top: 8px; color: ${color.goldLight}; font-size: 26px; font-weight: 600; letter-spacing: .22em; }
+    .ornament { margin-top: 36px; width: 144px; height: 28px; }
   `, `
-    <span class="mark">${escapeHtml(site.logo.mark)}</span>
-    <h1 class="name">${escapeHtml(site.name)}</h1>
-    <p class="eyebrow"><span>${phrasesHtml(site.hero.eyebrow)}</span></p>
+    <span class="circle one"></span><span class="circle two"></span>
+    <h1 class="name serif">${escapeHtml(site.name.th)}</h1>
+    <p class="subtitle">${escapeHtml(site.logoSubtitle)}</p>
+    <svg class="ornament" viewBox="0 0 72 14" aria-hidden="true">
+      <path d="M0 7h26M46 7h26" stroke="${color.gold}"/><path d="M36 1l6 6-6 6-6-6z" fill="${color.gold}"/>
+    </svg>
   `),
 }
 
-/** Throws if Noto Sans Thai did not load, instead of saving an image in a fallback font. */
-async function waitForFont(page) {
-  const loaded = await page.evaluate(async (texts) => {
+/** Throws if the fonts did not load, instead of saving an image in a fallback font. */
+async function waitForFonts(page) {
+  const loaded = await page.evaluate(async (checks) => {
     await document.fonts.ready
     const faces = []
-    for (const [font, text] of texts) faces.push(...await document.fonts.load(font, text))
+    for (const [font, text] of checks) faces.push(...await document.fonts.load(font, text))
     return faces.length > 0 && faces.every(face => face.status === 'loaded')
-  }, [['700 16px "Noto Sans Thai"', site.name + site.logo.mark], ['400 16px "Noto Sans Thai"', 'ศูนย์ฝึกอบรม']])
-  if (!loaded) throw new Error('Noto Sans Thai did not load from Google Fonts. Check the internet connection.')
+  }, [['600 16px "Noto Serif Thai"', site.name.th], ['600 16px "Noto Sans Thai"', site.logoSubtitle]])
+  if (!loaded) throw new Error('The fonts did not load from Google Fonts. Check the internet connection.')
 }
 
 async function renderPng(browser, image) {
   const page = await browser.newPage({ viewport: { width: image.width, height: image.height }, deviceScaleFactor: 1 })
   await page.setContent(image.html, { waitUntil: 'load' })
-  await waitForFont(page)
+  await waitForFonts(page)
   const png = await page.screenshot({ type: 'png' })
   await page.close()
 

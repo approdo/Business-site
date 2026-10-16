@@ -1,12 +1,12 @@
 # Business-site (demo)
 
-A five-page website in Thai and English for a made-up Thai massage & spa shop. It is a portfolio
-demo: the brand and every detail on the site are fictional.
+A five-page website in Thai and English for a made-up Thai massage & spa shop, Nuanplai (นวลไพล).
+It is a portfolio demo: the brand and every detail on the site are fictional.
 
-> Work in progress: this is the skeleton (pages, header, footer, two languages). The design,
-> content and images come next. This README is completed with the content.
+> Work in progress: the home and services pages are done; about, gallery and contact come next.
+> This README is completed with them.
 
-Planned live site: <https://0984043505frong.github.io/Business-site/>
+Planned live site: <https://approdo.github.io/Business-site/>
 
 ## Stack
 
@@ -29,12 +29,24 @@ npm run test:unit
 npm run test:e2e     # needs `npm run generate` first and `npx playwright install chromium` once
 ```
 
+Images (need internet and the Playwright Chromium; look at the results before committing):
+
+```sh
+npm run photos        # downloads the photos in app/data/photos.ts, writes WebP files to public/images/
+npm run brand-images  # favicon, apple-touch-icon and link-preview image from the theme colours
+```
+
 ## Where things are
 
 - Pages: `app/pages/` (Thai at `/Business-site/<page>/`, English at `/Business-site/en/<page>/`).
-- Texts of both languages: `i18n/locales/th.json` and `en.json`.
+- Services and prices: `app/data/services.ts` — the services page and the three home-page cards
+  (`featured`) are built from it.
+- Home page texts and reviews: `app/data/home.ts`, `app/data/reviews.ts`; page headings and the
+  booking band: `app/data/pages.ts`.
+- Short interface texts of both languages: `i18n/locales/th.json` and `en.json`.
 - Site URL, menu and the demo notice in the footer: `app/data/site.ts`.
-- Phone, email, booking and LINE links: `app/data/contact.ts` (see `TODO(line)` there).
-- Colours and fonts: `app/assets/css/theme.css`.
+- Phone, email, opening hours, booking and LINE links: `app/data/contact.ts` (see `TODO(line)` there).
+- Colours, fonts, corner radii: `app/assets/css/theme.css`.
+- Photos: `app/data/photos.ts` and `public/images/`; credits in [CREDITS.md](CREDITS.md).
 
 © 2026 0984043505Frong

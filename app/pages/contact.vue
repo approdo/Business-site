@@ -12,12 +12,12 @@ const { t } = useI18n()
     -->
     <div
       id="booking"
-      class="mt-10 rounded-card border border-border p-6"
+      class="mt-10 rounded-card border border-line bg-card p-6 shadow-card"
     >
-      <h2 class="text-[24px] font-bold text-brand-900">
+      <h2 class="text-[24px]">
         {{ t('booking.title') }}
       </h2>
-      <p class="mt-2 text-ink-muted">
+      <p class="mt-2 text-text-muted">
         {{ t('booking.placeholder') }}
       </p>
     </div>

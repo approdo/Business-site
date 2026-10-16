@@ -1,52 +1,70 @@
 /*
- * Design tokens: the only place where colours, the font, corner radii and shadows are defined.
+ * Design tokens: the only place where colours, fonts, corner radii and shadows are defined.
  * To re-theme the site, change the values here and rebuild.
  *
- * TEMPORARY: these are the Landing-page tokens, kept so the skeleton has a readable style.
- * BS-004 replaces them with the tokens of the chosen design (Demo-story/Business-site/design/).
+ * Design A "warm teak & candlelight" (D-007): the values come from the design spec,
+ * Demo-story/Business-site/design/spec.md section 1, and keep the names of the mockup.
  *
- * Each token becomes a Tailwind utility (bg-brand-900, text-ink, rounded-card, shadow-card, ...) and a
- * CSS variable (var(--color-brand-900)). `static` keeps every variable in the output even when no
+ * Each token becomes a Tailwind utility (bg-surface, text-accent, rounded-arch, shadow-card, font-heading, ...)
+ * and a CSS variable (var(--color-accent)). `static` keeps every variable in the output even when no
  * utility uses it, and `--color-*: initial` removes Tailwind's default palette, so colours outside
  * this file cannot be used by accident.
+ *
+ * Contrast (spec 1): every text colour below is at least 4.5:1 on the backgrounds it is used on.
+ * --color-gold is 3.02:1 on cream, so it is for ornaments, lines and stars only, never for text:
+ * small gold text is gold-ink on light backgrounds and gold-light on dark ones.
  */
 @theme static {
   --color-*: initial;
 
+  /* Backgrounds */
+  --color-bg: #fbf6ef;
+  --color-surface: #f3e8da;
+  --color-card: #fffdf9;
   --color-white: #ffffff;
 
-  /* Brand (navy) */
-  --color-brand-50: #eef3f9;
-  --color-brand-100: #dce6f2;
-  --color-brand-700: #1d4e89;
-  --color-brand-800: #14365f;
-  --color-brand-900: #0b2545;
+  /* Text */
+  --color-text: #2e211a;
+  --color-text-muted: #66503f;
 
-  /* Accent (orange) */
-  --color-accent-400: #ffa94d;
-  --color-accent-500: #f7941d;
-  --color-accent-600: #e5830f;
-  --color-accent-700: #a14b00;
+  /* Terracotta: buttons, prices, accents */
+  --color-accent: #a4471f;
+  --color-accent-hover: #8a3a18;
+  --color-accent-soft: #ecd3b9;
 
-  /* Surfaces, text and borders */
-  --color-surface: #ffffff;
-  --color-surface-muted: #f2f5f9;
-  --color-ink: #16202e;
-  --color-ink-muted: #4a5667;
-  --color-border: #d6dee8;
-  --color-border-strong: #7a8699;
+  /* Turmeric gold */
+  --color-gold: #b9852f;
+  --color-gold-ink: #85601f;
+  --color-gold-light: #d6a85a;
+
+  /* Dark teak: booking band and footer */
+  --color-deep: #3a281d;
+  --color-deeper: #2a1d15;
+  --color-on-deep: #f8eee2;
+  --color-on-deep-muted: #d9c6b1;
+
+  --color-line: #e2d3c1;
 
   /* Form feedback */
   --color-danger: #b42318;
   --color-success: #067647;
 
-  /* "Thai Fallback: Tahoma" (main.css) draws the Thai letters until Noto Sans Thai has loaded. */
-  /* @nuxt/fonts adds its size-adjusted Latin fallbacks right after "Noto Sans Thai". */
-  --font-sans: "Noto Sans Thai", "Thai Fallback: Tahoma", ui-sans-serif, system-ui, sans-serif;
+  /*
+   * Body text in Noto Sans Thai, headings in Noto Serif Thai (spec 1). @nuxt/fonts serves both from
+   * this site and adds its size-adjusted Latin fallbacks right after the web font. "Thai Fallback: Tahoma"
+   * (main.css) draws the Thai letters until the web font has loaded; it was measured for Noto Sans Thai,
+   * so for the serif headings it is only an approximation (BS-008).
+   */
+  --font-body: "Noto Sans Thai", "Thai Fallback: Tahoma", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Noto Serif Thai", "Thai Fallback: Tahoma", Georgia, serif;
 
-  --radius-card: 12px;
-  --radius-button: 10px;
-  --radius-input: 8px;
+  --radius-card: 18px;
+  --radius-arch: 999px 999px 18px 18px;
+  --radius-button: 999px;
+  --radius-input: 12px;
 
-  --shadow-card: 0 1px 2px color-mix(in srgb, var(--color-brand-900) 8%, transparent), 0 12px 32px color-mix(in srgb, var(--color-brand-900) 12%, transparent);
+  --shadow-card: 0 10px 30px rgb(58 40 29 / 0.08);
+
+  /* Widest content box; page-container (main.css) keeps 16px free on each side below it. */
+  --container: 1180px;
 }

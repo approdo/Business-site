@@ -4,8 +4,7 @@
     "navLabel": "Main menu",
     "menuButton": "Menu",
     "booking": "Book now",
-    "switchLanguage": "ไทย",
-    "switchLanguageLabel": "เปลี่ยนเป็นภาษาไทย"
+    "switchLanguageLabel": "TH, เปลี่ยนเป็นภาษาไทย"
   },
   "nav": {
     "home": "Home",
@@ -15,8 +14,8 @@
     "contact": "Contact"
   },
   "pages": {
-    "home": { "title": "Thai Massage & Spa", "description": "Home page — content comes in BS-004" },
-    "services": { "title": "Services & Prices", "description": "Services and prices — content comes in BS-004" },
+    "home": { "title": "Thai Massage & Spa", "description": "Nuanplai, a Thai massage and spa: Thai massage, oil massage and herbal compresses by therapists with more than 10 years of experience. Open every day 10:00–22:00. A demo website for a fictional brand." },
+    "services": { "title": "Services & Prices", "description": "Prices of Nuanplai's Thai massage, oil massage, facials and packages, by length. Everything included." },
     "about": { "title": "About us", "description": "Our story and team — content comes in BS-005" },
     "gallery": { "title": "Gallery", "description": "Photos of the shop — content comes in BS-005" },
     "contact": { "title": "Contact", "description": "Map, opening hours and booking form — content comes in BS-005" }
@@ -26,11 +25,32 @@
     "title": "Book now",
     "placeholder": "The booking form goes here."
   },
+  "call": "Call",
+  "hours": {
+    "title": "Opening hours",
+    "lastBooking": "Last booking"
+  },
+  "home": {
+    "seeServices": "Services & prices"
+  },
+  "services": {
+    "seeAll": "See all services and prices",
+    "categoriesLabel": "Service categories",
+    "startingAt": "From {price} THB",
+    "price": "{price} THB",
+    "minutes": "{minutes} min",
+    "includes": "Includes:"
+  },
+  "reviews": {
+    "rating": "{rating} out of 5 stars"
+  },
   "footer": {
+    "tagline": "Thai massage and spa with gentle hands and real Thai herbs.",
     "navTitle": "Menu",
     "contactTitle": "Contact",
     "phoneLabel": "Phone",
     "emailLabel": "Email",
+    "photoCredit": "Photos from Unsplash · Pexels",
     "disclaimerTranslation": "Demo website for a portfolio · the brand and all details are fictional"
   }
 }
